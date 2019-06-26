@@ -1,8 +1,12 @@
 package ObjetsSimples;
 
 import exceptions.DataExceptions;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import xchange.Xchange;
 
 public class EditeurCollection {
 
@@ -53,5 +57,74 @@ public class EditeurCollection {
         }
 
     }
+    
+     /*
+     La méthode save permet de sauvegarder l'objet dans SQL
+     Elle nécessite un objet echange pour initier la connexion et une string qui correspond à la requête envoyée
+     Cette String est générée par la méthode genValue ci-dessous
+    
+     2 options dans cette requête :
+     1- l'objet vient d'être crée et n'existe pas dans SQL , l'addrID est vide donc on crée un nouvel enregistrement
+     2- l'objet est déjà dans SQL , l'addrID n'est pas vide donc on met à jour l'enregistrement
+     */
+
+    public void save(Xchange echange, String value) {
+        Statement stat = null;
+
+        try {
+            stat = echange.getConnexion().createStatement();
+            String query = "";
+            if (this.publisherCollID == null) {
+                query = "INSERT INTO EDITEURCOLLECTION "
+                        + "(PUBLISHERID, PUBLISHERCOLLNAME) VALUES ";
+                query += value;
+
+            } else {
+                query = "UPDATE EDITEURCOLLECTION "
+                        + value + " WHERE PUBLISHERCOLLID = " + this.publisherCollID;
+            }
+
+            System.out.println(query);
+            stat.executeUpdate(query);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Ecriture Table : " + ex.getErrorCode() + " / " + ex.getMessage(), "Adresse", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (stat != null) {
+                try {
+                    stat.close();
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(null, "Fermeture statement : " + ex.getErrorCode() + " / " + ex.getMessage(), "Table Adresse", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+    /*
+     La méthode genValue sert à générer une partie de la requête necessaire pour la sauvegarde
+    
+     2 options sont disponibles
+     1- l'objet vient d'être crée et n'existe pas dans SQL , l'addrID est vide donc on crée un nouvel enregistrement
+     2- l'objet est déjà dans SQL , l'addrID n'est pas vide donc on met à jour l'enregistrement
+     */
+
+    public String genValue() {
+        String str = "";
+        if (this.publisherCollID == null) {
+            str = "(";
+
+            str += publisher.getID() + ", ";
+            str += "'" + publisherCollName + "')";
+
+
+        } else {
+            
+            str += "SET PUBLISHERID = " + publisher.getID() + ", ";
+            str += " PUBLISHERCOLLNAME = '" + publisherCollName + "'";
+
+
+        }
+        return str;
+    }
+
 
 }
