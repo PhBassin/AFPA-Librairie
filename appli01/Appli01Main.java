@@ -5,6 +5,11 @@
  */
 package appli01;
 
+import ObjetsSimples.Adresse;
+import exceptions.DataExceptions;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author cda201
@@ -15,7 +20,15 @@ public class Appli01Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+     
+        Adresse addr = new Adresse();
+
+        try {
+            addr.setPostalCode("aze");
+        } catch (DataExceptions ex) {
+            ex.msgPrint();
+        }
+
     }
     
 }
