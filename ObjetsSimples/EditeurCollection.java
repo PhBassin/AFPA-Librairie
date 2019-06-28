@@ -14,9 +14,20 @@ public class EditeurCollection {
     private String genre = "editeurcollection";
     private String publisherCollID;
     private Editeur publisher;
+    private Statut status;
     private String publisherCollName;
 
+    public Statut getStatus() {
+        return status;
+    }
+
+    public void setStatus(Statut status) {
+        this.status = status;
+    }
+
     public EditeurCollection() {
+        this.publisher = new Editeur();
+        this.status = new Statut();
     }
 
     public int getType() {
@@ -39,7 +50,7 @@ public class EditeurCollection {
         return publisher;
     }
 
-    public void setPublisherID(Editeur publisher) {
+    public void setPublisher(Editeur publisher) {
         this.publisher = publisher;
     }
 
@@ -88,13 +99,13 @@ public class EditeurCollection {
             stat.executeUpdate(query);
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Ecriture Table : " + ex.getErrorCode() + " / " + ex.getMessage(), "Adresse", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Ecriture Table : " + ex.getErrorCode() + " / " + ex.getMessage(), "Editeur Collection", JOptionPane.ERROR_MESSAGE);
         } finally {
             if (stat != null) {
                 try {
                     stat.close();
                 } catch (SQLException ex) {
-                    JOptionPane.showMessageDialog(null, "Fermeture statement : " + ex.getErrorCode() + " / " + ex.getMessage(), "Table Adresse", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Fermeture statement : " + ex.getErrorCode() + " / " + ex.getMessage(), "Table Editeur Collection", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
@@ -113,17 +124,27 @@ public class EditeurCollection {
             str = "(";
 
             str += publisher.getID() + ", ";
-            str += "'" + publisherCollName + "')";
+            str += "'" + apostrophe(publisherCollName) + "')";
 
 
         } else {
             
             str += "SET PUBLISHERID = " + publisher.getID() + ", ";
-            str += " PUBLISHERCOLLNAME = '" + publisherCollName + "'";
+            str += " PUBLISHERCOLLNAME = '" + apostrophe(publisherCollName) + "'";
 
 
         }
         return str;
+    }
+    
+            public String apostrophe(String apostrophe) {
+        String str = "";
+        if (apostrophe != null) {
+            str = apostrophe.replace("'", "''");
+        }
+        
+        return str;
+        
     }
 
 

@@ -26,6 +26,11 @@ public class Adresse {
     private String more;
 
     public Adresse() {
+        this.country = new Pays();
+        this.publisher = new Editeur();
+        this.customer = new Client();
+        this.cli_Customer = new Client();
+        
     }
 
     public void setAddrID(String addrID) {
@@ -241,29 +246,38 @@ public class Adresse {
 
             str += customer.getId() + ", ";
             str += cli_Customer.getId() + ", ";
-            str += "'" + name + "', ";
+            str += "'" + apostrophe(name) + "', ";
             str += "'" + number + "', ";
             str += "'" + streetType + "', ";
-            str += "'" + streetName + "', ";
+            str += "'" + apostrophe(streetName) + "', ";
             str += "'" + postalCode + "', ";
             str += "'" + city + "', ";
-            str += "'" + more + "')";
+            str += "'" + apostrophe(more) + "')";
 
         } else {
             str += "SET COUNTRYID = " + country.getCountryID() + ", ";
             str += " PUBLISHERID = " + publisher.getID() + ", ";
             str += " CUSTOMERID = " + customer.getId() + ", ";
             str += " CLI_CUSTOMERID = " + customer.getId() + ", ";
-            str += " ADDRESSNAME = '" + name + "', ";
+            str += " ADDRESSNAME = '" + apostrophe(name) + "', ";
             str += " ADDRESSNUMBER = '" + number + "', ";
             str += " ADDRESSSTREETTYPE = '" + streetType + "', ";
-            str += " ADDRESSSTREETNAME = '" + streetName + "', ";
+            str += " ADDRESSSTREETNAME = '" + apostrophe(streetName) + "', ";
             str += " ADDRESSPOSTALCODE = '" + postalCode + "', ";
             str += " ADDRESSCITY = '" + city + "', ";
-            str += " ADDRESSMORE = '" + more + "'";
+            str += " ADDRESSMORE = '" + apostrophe(more) + "'";
 
         }
         return str;
+    }
+    
+            public String apostrophe(String apostrophe){
+        String str ="";
+        if(apostrophe != null)
+            str = apostrophe.replace("'", "''");
+       
+        return  str; 
+        
     }
 
 }
